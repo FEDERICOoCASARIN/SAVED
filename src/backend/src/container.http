@@ -1,0 +1,43 @@
+### GET container by id
+GET http://localhost:8080/saved4_war_exploded/api/containers/1
+Accept: application/json
+
+### GET container by id (not found example)
+GET http://localhost:8080/saved4_war_exploded/api/containers/999
+Accept: application/json
+
+### GET all containers
+GET http://localhost:8080/saved4_war_exploded/api/containers/
+Accept: application/json
+
+### GET all containers with limit (e.g., first 5)
+GET http://localhost:8080/saved4_war_exploded/api/containers?limit=10
+Accept: application/json
+
+### POST a new container
+POST http://localhost:8080/saved4_war_exploded/api/containers/
+Content-Type: application/json
+Accept: application/json
+
+{
+  "maxWeight": 1500.50,
+  "status": "available"
+}
+
+### PUT (Update) an existing container
+PATCH http://localhost:8080/saved4_war_exploded/api/containers/1
+Content-Type: application/json
+Accept: application/json
+
+{
+  "maxWeight": 1600.00,
+  "status": "in_use"
+}
+
+### DELETE a container
+DELETE http://localhost:8080/saved4_war_exploded/api/containers/7
+Accept: application/json
+
+### DELETE a container (not found example)
+DELETE http://localhost:8080/saved4_war_exploded/api/containers/999
+Accept: application/json

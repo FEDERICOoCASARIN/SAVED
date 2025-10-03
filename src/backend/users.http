@@ -1,0 +1,38 @@
+### GET ALL USERS
+GET http://localhost:8080/saved4_war_exploded/api/users?limit=100&type=company
+
+
+### GET ONE USER
+GET http://localhost:8080/saved4_war_exploded/api/users/admin
+
+
+### SEARCH USERS
+GET http://localhost:8080/saved4_war_exploded/api/users/search/company_d
+
+
+
+
+### PATCH ONE USER
+PATCH http://localhost:8080/saved4_war_exploded/api/users/admin_1
+Content-Type: application/json
+
+{
+  "name": "admin raze"
+}
+
+
+### POST A USER
+POST http://localhost:8080/saved4_war_exploded/api/users
+Content-Type: application/json
+
+{
+  "username": "hooe",
+  "password": "hoi",
+  "type": "ADMIN",
+  "name": "JOERHEI",
+  "created_at": "2025-06-26T14:42:08+02"
+}
+
+### DELETE A USER
+DELETE http://localhost:8080/saved4_war_exploded/api/users/joe
+Content-Type: application/json

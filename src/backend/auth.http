@@ -1,0 +1,21 @@
+### POST LOGIN
+POST http://localhost:8080/saved4_war_exploded/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "test@gmail.com",
+  "password": "hoi"
+}
+
+
+### SEARCH ORDER (GET ORDER BY ID)
+GET http://localhost:8080/saved4_war_exploded/api/orders/41?order_for=company_a
+
+
+
+
+### EXPORT
+GET http://localhost:8080/saved4_war_exploded/api/orders/export/csv
+
+### NOTIFICATIONS
+GET http://localhost:8080/saved4_war_exploded/api/notifications?recipient=company_b

@@ -1,0 +1,58 @@
+### GET all vehicles
+GET http://localhost:8080/saved4_war_exploded/api/vehicle
+
+### GET filtered vehicles
+GET http://localhost:8080/saved4_war_exploded/api/vehicle?status=in_use
+
+### UPDATE vehicles
+PATCH http://localhost:8080/saved4_war_exploded/api/vehicle/7
+Content-Type: application/json
+
+{
+  "id": 7,
+  "position": {
+    "x": 4.482146,
+    "y": 51.917942
+  },
+  "battery_level": 92.00,
+  "status": "in_use",
+  "distance": 8.00
+}
+
+### UPDATE containers
+PATCH http://localhost:8080/saved4_war_exploded/api/containers/2
+Content-Type: application/json
+
+{
+  "status": "in_use",
+  "maxWeight": 1500
+}
+
+### POST
+POST http://localhost:8080/saved4_war_exploded/api/vehicle/
+Content-Type: application/json
+
+{
+  "position": {
+    "x": 6.8937,
+    "y": 52.2215
+  },
+  "battery_level": 92.00,
+  "status": "in_use",
+  "distance": 8.00
+}
+
+
+
+### GET 1 vehicle
+GET http://localhost:8080/saved4_war_exploded/api/vehicle/1
+
+
+### POST login
+POST http://localhost:8080/saved4_war_exploded/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "test@gmail.com",
+  "password": "helly"
+}

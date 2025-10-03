@@ -1,0 +1,2305 @@
+openapi: 3.1.0
+info:
+  title: SAVED4 OpenAPI Spec
+  description: API specification for SAVED4
+  version: 0.1.0
+  x-fiddle-import-file: true
+paths:
+  /companies:
+    post:
+      operationId: addCompany
+      summary: Add company
+      responses:
+        "201":
+          description: The request was successful, and a new resource was created.
+          content:
+            application/json:
+              schema:
+                type: integer
+                description: username of the newly created company user
+                title: AddCompanyCreated
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalServerErrror"
+      parameters: []
+      tags:
+        - companies
+      security: []
+      description: Creates a new company account in the system. Appropriate error
+        responses are returned if creation fails.
+      requestBody:
+        required: true
+        description: JSON object containing the company account details.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Company"
+    get:
+      operationId: getAllCompanies
+      summary: Get all companies
+      responses:
+        "200":
+          description: The request was successful, and the server has returned the
+            requested resource in the response body.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CompanySummary"
+                title: GetAllCompaniesOk
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerErrror"
+      parameters:
+        - in: query
+          name: limit
+          required: false
+          style: form
+          description: Maximum number of users to return,
+          explode: true
+          schema:
+            type: integer
+          allowReserved: false
+      description: Retrieves an unordered list of company users from the system.
+      tags:
+        - companies
+      security: []
+  /companies/{username}:
+    get:
+      operationId: getCompany
+      summary: Get company
+      parameters:
+        - $ref: "#/components/parameters/username"
+      responses:
+        "200":
+          description: The request was successful, and the server has returned the
+            requested resource in the response body.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompanySummary"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerErrror"
+      description: "Retrieves a company resource from the system by its username. If
+        the company does not exist, a 404 response is returned. "
+      tags:
+        - companies
+      security: []
+    delete:
+      operationId: deleteCompany
+      summary: Delete company
+      parameters:
+        - $ref: "#/components/parameters/username"
+      responses:
+        "204":
+          description: The request was successful, but there is no content to return in
+            the response.
+          content:
+            application/json:
+              schema:
+                type: "null"
+                title: DeleteCompanyNoContent
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerErrror"
+      description: Deletes the company identified by the specified username.
+      tags:
+        - companies
+      security: []
+    patch:
+      operationId: updateAnExistingCompany
+      summary: Update an existing company
+      parameters:
+        - $ref: "#/components/parameters/username"
+      responses:
+        "200":
+          description: The request was successful, and the server has returned the
+            requested resource in the response body.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompanySummary"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalServerErrror"
+      description: Updates the details of an existing company identified by the
+        username in the path.
+      tags:
+        - companies
+      security: []
+      requestBody:
+        required: true
+        description: A JSON object containing the fields to be updated.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CompanyPartialUpdate"
+  /orders:
+    get:
+      operationId: getAllOrders
+      summary: Get all orders
+      responses:
+        "200":
+          description: The request was successful, and the server has returned the
+            requested resource in the response body.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/OrderSummary"
+                title: GetAllOrdersOk
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerErrror"
+      parameters:
+        - name: container_id
+          in: query
+          description: Filter orders by container identifier
+          schema:
+            type: integer
+          required: false
+          style: form
+          explode: true
+          allowReserved: false
+        - name: requester
+          in: query
+          description: Filter orders by the requester’s username
+          schema:
+            type: string
+          required: false
+          style: form
+          explode: true
+          allowReserved: false
+        - name: start_date
+          in: query
+          description: Filter orders created on or after this date (ISO 8601 format
+            `YYYY-MM-DD`)
+          schema:
+            type: string
+            format: date-time
+          required: false
+          style: form
+          explode: true
+          allowReserved: false
+        - name: end_date
+          in: query
+          description: Filter orders created on or before this date (ISO 8601 format
+            `YYYY-MM-DD` )
+          schema:
+            type: string
+            format: date-time
+          required: false
+          style: form
+          explode: true
+          allowReserved: false
+        - name: source
+          in: query
+          description: Filter orders by source location, identified by username
+          schema:
+            type: string
+          required: false
+          style: form
+          explode: true
+          allowReserved: false
+        - name: destination
+          in: query
+          description: Filter orders by destination location, identified by username
+          schema:
+            type: string
+          required: false
+          style: form
+          explode: true
+          allowReserved: false
+        - name: route_id
+          in: query
+          description: Filter orders by route identifier
+          schema:
+            type: integer
+          required: false
+          style: form
+          explode: true
+          allowReserved: false
+        - name: status
+          in: query
+          description: Filter orders by status (e.g., created, scheduled, undergoing,
+            completed, canceled)
+          schema:
+            type: string
+          required: false
+          style: form
+          explode: true
+          allowReserved: false
+        - name: operationType
+          in: query
+          description: Filter orders by operation type (e.g. loading, unloading)
+          schema:
+            type: string
+          required: false
+          style: form
+          explode: true
+          allowReserved: false
+      description: Retrieves a list of orders from the system. Results are unordered.
+      tags:
+        - orders
+      security: []
+    post:
+      summary: Create order
+      operationId: createOrder
+      description: Creates a new record of type Order.
+      tags:
+        - orders
+      security: []
+      responses:
+        "201":
+          description: The request was successful, and a new resource was created.
+          content:
+            application/json:
+              schema:
+                type: integer
+                description: id of the newly created order
+                title: CreateOrderCreated
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalServerErrror"
+    delete:
+      operationId: deleteOrder
+      summary: Delete order
+      parameters:
+        - $ref: "#/components/parameters/order_id"
+      responses:
+        "204":
+          description: The request was successful, but there is no content to return in
+            the response.
+          content:
+            application/json:
+              schema:
+                type: "null"
+                title: DeleteOrderNoContent
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerErrror"
+      description: Deletes the company identified by the specified username.
+      tags:
+        - orders
+      security: []
+  /orders/company/{username}:
+    get:
+      operationId: getCompanyOrders
+      summary: Get company orders
+      description: Retrieves all the orders made by a company, sorted by newest first.
+      parameters:
+        - $ref: "#/components/parameters/username"
+      responses:
+        "200":
+          description: The request was successful, and the server has returned the
+            requested resource in the response body.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Order"
+                title: GetCompanyOrdersOk
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerErrror"
+      tags:
+        - orders
+      security: []
+  /costs:
+    get:
+      operationId: getCosts
+      tags:
+        - costs
+      summary: Get costs
+      responses:
+        "200":
+          description: The request was successful, and the server has returned the
+            requested resource in the response body.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Costs"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalServerErrror"
+      parameters: []
+      description: Get the costs associated with transporting an empty or full
+        container, and the fixed cost per km.
+    put:
+      operationId: updateCosts
+      tags:
+        - costs
+      summary: Update costs
+      responses:
+        "200":
+          description: The request was successful, and the server has returned the
+            requested resource in the response body.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                required:
+                  - data
+                title: UpdateCostsOk
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalServerErrror"
+      parameters: []
+      description: Update the cost parameters for transporting an empty or full
+        container, and the fixed cost per kilometer.
+      requestBody:
+        required: true
+        description: A JSON object containing the fields to be updated.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CostsPartialUpdate"
+  /orders/{order_id}:
+    get:
+      operationId: getOrder
+      tags:
+        - orders
+      summary: Get order
+      parameters:
+        - $ref: "#/components/parameters/order_id"
+      responses:
+        "200":
+          description: The request was successful, and the server has returned the
+            requested resource in the response body.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Order"
+                required:
+                  - data
+                title: GetOrderOk
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerErrror"
+      description: Get the order identified by order id
+    patch:
+      operationId: patchOrder
+      summary: Update an existing order
+      parameters:
+        - $ref: "#/components/parameters/order_id"
+      responses:
+        "200":
+          description: The request was successful, and the server has returned the
+            requested resource in the response body.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Order"
+                required:
+                  - data
+                title: PutOrderOk
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalServerErrror"
+      description: Updates the details of an existing order identified by order id.
+      tags:
+        - orders
+      security: []
+      requestBody:
+        required: true
+        description: A JSON object containing the fields to be updated.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OrderPartialUpdate"
+  /chats/{chat_id}:
+    get:
+      summary: Get chat
+      operationId: getChat
+      description: Returns a chat identified by chat id.
+      tags:
+        - chats
+      security: []
+      parameters:
+        - $ref: "#/components/parameters/chat_id"
+      responses:
+        "200":
+          description: The request was successful, and the server has returned the
+            requested resource in the response body.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Chat"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerErrror"
+  /chats:
+    get:
+      summary: List chat
+      operationId: listChat
+      description: Returns a list of all chats accessible to the client, ordered by
+        most recent activity.
+      tags:
+        - chats
+      security: []
+      responses:
+        "200":
+          description: The request was successful, and the server has returned the
+            requested resource in the response body.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                title: ListChatOk
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerErrror"
+      parameters:
+        - in: query
+          name: limit
+          required: false
+          style: form
+          description: Maximum number of chats to return
+          explode: true
+          schema:
+            type: integer
+          allowReserved: false
+  /chats/{chat_id}/messages:
+    get:
+      summary: List message
+      operationId: listMessage
+      description: Returns a list of all messages belonging to a chat, sorted by
+        newest first.
+      tags:
+        - messages
+      security: []
+      parameters:
+        - in: query
+          name: limit
+          required: false
+          style: form
+          description: Maximum number of messages to return
+          explode: true
+          schema:
+            type: integer
+          allowReserved: false
+        - $ref: "#/components/parameters/chat_id"
+      responses:
+        "200":
+          description: The request was successful, and the server has returned the
+            requested resource in the response body.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Message"
+                title: ListMessageOk
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerErrror"
+    post:
+      summary: Create message
+      operationId: createMessage
+      description: Creates a new message.
+      tags:
+        - messages
+      security: []
+      parameters:
+        - $ref: "#/components/parameters/chat_id"
+      responses:
+        "201":
+          description: The request was successful, and a new resource was created.
+          content:
+            application/json:
+              schema:
+                type: integer
+                description: id of the newly created message
+                title: CreateMessageCreated
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalServerErrror"
+      requestBody:
+        required: true
+        description: ""
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChatCreate"
+  /containers/{container_id}:
+    get:
+      summary: Get container
+      operationId: getContainer
+      description: Returns a container identified by container id.
+      tags:
+        - containers
+      security: []
+      parameters:
+        - $ref: "#/components/parameters/container_id"
+      responses:
+        "200":
+          description: The request was successful, and the server has returned the
+            requested resource in the response body.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Container"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerErrror"
+    delete:
+      summary: Delete container
+      operationId: deleteContainer
+      description: Deletes a container.
+      tags:
+        - containers
+      security: []
+      parameters:
+        - $ref: "#/components/parameters/container_id"
+      responses:
+        "204":
+          description: The request was successful, but there is no content to return in
+            the response.
+          content:
+            application/json:
+              schema:
+                type: "null"
+                title: DeleteContainerNoContent
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerErrror"
+  /containers:
+    post:
+      summary: Create container
+      operationId: createContainer
+      description: Creates a new record of type Container.
+      tags:
+        - containers
+      security: []
+      responses:
+        "201":
+          description: The request was successful, and a new resource was created.
+          content:
+            application/json:
+              schema:
+                type: integer
+                description: id of the newly created container
+                title: CreateContainerCreated
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalServerErrror"
+      requestBody:
+        required: true
+        description: ""
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContainerCreate"
+    get:
+      summary: List container
+      operationId: listContainer
+      description: Returns a list of all containers.
+      tags:
+        - containers
+      security: []
+      responses:
+        "200":
+          description: The request was successful, and the server has returned the
+            requested resource in the response body.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Container"
+                title: ListContainerOk
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerErrror"
+      parameters:
+        - in: query
+          name: limit
+          required: false
+          style: form
+          description: Maximum number of chats to return
+          explode: true
+          schema:
+            type: integer
+          allowReserved: false
+  /vehicles/{vehicle_id}:
+    get:
+      summary: Get vehicle
+      operationId: getVehicle
+      description: Returns a vehicle identified by vehicle id.
+      tags:
+        - vehicles
+      security: []
+      parameters:
+        - $ref: "#/components/parameters/vehicle_id"
+      responses:
+        "200":
+          description: The request was successful, and the server has returned the
+            requested resource in the response body.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Vehicle"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerErrror"
+    delete:
+      summary: Delete vehicle
+      operationId: deleteVehicle
+      description: Deletes a vehicle.
+      tags:
+        - vehicles
+      security: []
+      parameters:
+        - $ref: "#/components/parameters/vehicle_id"
+      responses:
+        "204":
+          description: The request was successful, but there is no content to return in
+            the response.
+          content:
+            application/json:
+              schema:
+                type: "null"
+                title: DeleteVehicleNoContent
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerErrror"
+    patch:
+      summary: Update vehicle
+      operationId: updateVehicle
+      description: Updates a vehicle.
+      tags:
+        - vehicles
+      security: []
+      parameters:
+        - $ref: "#/components/parameters/vehicle_id"
+      responses:
+        "200":
+          description: The request was successful, and the server has returned the
+            requested resource in the response body.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Vehicle"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerErrror"
+      requestBody:
+        required: true
+        description: JSON object containing the fields to update
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VehiclePartialUpdate"
+  /vehicles:
+    get:
+      summary: List vehicle
+      operationId: listVehicle
+      description: Returns a list of all vehicles.
+      tags:
+        - vehicles
+      security: []
+      responses:
+        "200":
+          description: The request was successful, and the server has returned the
+            requested resource in the response body.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Vehicle"
+                title: ListVehicleOk
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerErrror"
+      parameters:
+        - in: query
+          name: limit
+          required: false
+          style: form
+          description: Maximum number of vehicles to return
+          explode: true
+          schema:
+            type: integer
+          allowReserved: false
+    post:
+      summary: Create vehicle
+      operationId: createVehicle
+      description: Creates a new vehicle.
+      tags:
+        - vehicles
+      security: []
+      responses:
+        "201":
+          description: The request was successful, and a new resource was created.
+          content:
+            application/json:
+              schema:
+                type: integer
+                description: id of the newly created vehicle
+                title: CreateVehicleCreated
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalServerErrror"
+      requestBody:
+        required: true
+        description: JSON object containing required fields
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VehicleCreate"
+      parameters: []
+  /routes/{route_id}:
+    get:
+      summary: Get route
+      operationId: getRoute
+      description: Returns a route identified by route id.
+      tags:
+        - routes
+      security: []
+      parameters:
+        - $ref: "#/components/parameters/route_id"
+      responses:
+        "200":
+          description: The request was successful, and the server has returned the
+            requested resource in the response body.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Route"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerErrror"
+    patch:
+      summary: Update route
+      operationId: updateRoute
+      description: Updates a route.
+      tags:
+        - routes
+      security: []
+      parameters:
+        - $ref: "#/components/parameters/route_id"
+      responses:
+        "200":
+          description: The request was successful, and the server has returned the
+            requested resource in the response body.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Route"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerErrror"
+      requestBody:
+        required: true
+        description: ""
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RoutePartialUpdate"
+    delete:
+      summary: Delete route
+      operationId: deleteRoute
+      description: Deletes a route.
+      tags:
+        - routes
+      security: []
+      parameters:
+        - $ref: "#/components/parameters/route_id"
+      responses:
+        "204":
+          description: The request was successful, but there is no content to return in
+            the response.
+          content:
+            application/json:
+              schema:
+                type: "null"
+                title: DeleteRouteNoContent
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerErrror"
+  /routes:
+    get:
+      summary: List route
+      operationId: listRoute
+      description: Returns a list of all routes.
+      tags:
+        - routes
+      security: []
+      responses:
+        "200":
+          description: The request was successful, and the server has returned the
+            requested resource in the response body.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Route"
+                title: ListRouteOk
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerErrror"
+      parameters:
+        - in: query
+          name: limit
+          required: false
+          style: form
+          description: Maximum number of routes to return
+          explode: true
+          schema:
+            type: integer
+          allowReserved: false
+    post:
+      summary: Create route
+      operationId: createRoute
+      description: Creates a new route.
+      tags:
+        - routes
+      security: []
+      responses:
+        "201":
+          description: The request was successful, and a new resource was created.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/RouteCreate"
+                title: CreateRouteCreated
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalServerErrror"
+      parameters: []
+      requestBody:
+        required: true
+        description: ""
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RouteCreate"
+  /stats/{order_id}:
+    get:
+      summary: Get stats related to an order
+      operationId: getStatsRelatedToAnOrder
+      description: Returns statistics related to an order identified by order id.
+      tags:
+        - stats
+      security: []
+      parameters:
+        - $ref: "#/components/parameters/order_id"
+      responses:
+        "200":
+          description: The request was successful, and the server has returned the
+            requested resource in the response body.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrderStats"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerErrror"
+    patch:
+      summary: Update order stats
+      operationId: updateOrderStats
+      description: Updates the statistics of an order.
+      tags:
+        - stats
+      security: []
+      parameters:
+        - $ref: "#/components/parameters/order_id"
+      responses:
+        "200":
+          description: The request was successful, and the server has returned the
+            requested resource in the response body.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrderStats"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerErrror"
+      requestBody:
+        required: true
+        description: JSON object containing the fields to update
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OrderStatsPartialUpdate"
+  /stats:
+    get:
+      summary: List stats
+      operationId: listStats
+      description: Returns statistics related to all orders.
+      tags:
+        - stats
+      security: []
+      parameters:
+        - in: query
+          name: limit
+          required: false
+          style: form
+          description: Maximum number of orders to return stats for
+          explode: true
+          schema:
+            type: integer
+          allowReserved: false
+        - in: query
+          name: source
+          required: false
+          style: form
+          description: Filter by source.
+          explode: true
+          schema:
+            type: string
+          allowReserved: false
+        - in: query
+          name: destination
+          required: false
+          style: form
+          description: Filter by order destination.
+          explode: true
+          schema:
+            type: string
+          allowReserved: false
+        - in: query
+          name: startDate
+          required: false
+          style: form
+          description: Filter stats for orders created on or after this date (ISO 8601
+            format YYYY-MM-DD)
+          explode: true
+          schema:
+            type: string
+            format: date-time
+          allowReserved: false
+        - in: query
+          name: endDate
+          required: false
+          style: form
+          description: Filter stats for orders created on or before this date (ISO 8601
+            format YYYY-MM-DD)
+          explode: true
+          schema:
+            type: string
+            format: date-time
+          allowReserved: false
+      responses:
+        "200":
+          description: The request was successful, and the server has returned the
+            requested resource in the response body.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/OrderStats"
+                title: ListStatsOk
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerErrror"
+  /chats/{chat_id}/messages/{message_id}:
+    delete:
+      summary: Delete message
+      operationId: deleteMessage
+      description: Deletes a message.
+      tags:
+        - messages
+      security: []
+      parameters:
+        - $ref: "#/components/parameters/chat_id"
+        - $ref: "#/components/parameters/message_id"
+      responses:
+        "204":
+          description: The request was successful, but there is no content to return in
+            the response.
+          content:
+            application/json:
+              schema:
+                type: "null"
+                title: DeleteMessageNoContent
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerErrror"
+  /notifications:
+    get:
+      operationId: getUserNotifications
+      tags:
+        - notifications
+      summary: Get user notifications
+      responses:
+        "200":
+          description: The request was successful, and the server has returned the
+            requested resource in the response body.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Notification"
+                title: GetUserNotificationsOk
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          description: Authentication is required to access the requested resource. The
+            client must include the appropriate credentials.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+        "500":
+          $ref: "#/components/responses/InternalServerErrror"
+      parameters:
+        - in: query
+          name: limit
+          required: false
+          style: form
+          description: Maximum number of notifications to return.
+          explode: true
+          schema:
+            type: integer
+          allowReserved: false
+      description: Get a list of notifications of the authenticated client, sorted by
+        most recent first.
+  /login:
+    post:
+      operationId: loginUser
+      tags:
+        - login
+      summary: Login user
+      responses:
+        "200":
+          description: The login was successful, and the server has returned the
+            appropriate token.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJKb2UifQ.1KP0SsvENi7Uz1oQc07aXTL7kpQG5jBNIybqr60AlD4
+                required:
+                  - token
+        "401":
+          description: Authentication failed. The username or password is incorrect.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+        "429":
+          $ref: "#/components/responses/Too Many Requests"
+      requestBody:
+        required: true
+        description: A json object containing the credentials of the user to login
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: companyA
+                password:
+                  type: string
+                  example: pass1@word
+              required:
+                - username
+                - password
+components:
+  parameters:
+    username:
+      name: username
+      in: path
+      required: true
+      schema:
+        type: string
+    order_id:
+      name: order_id
+      in: path
+      required: true
+      schema:
+        type: integer
+    chat_id:
+      name: chat_id
+      in: path
+      required: true
+      schema:
+        type: integer
+    message_id:
+      name: message_id
+      in: path
+      required: true
+      schema:
+        type: integer
+    container_id:
+      name: container_id
+      in: path
+      required: true
+      schema:
+        type: integer
+    vehicle_id:
+      name: vehicle_id
+      in: path
+      required: true
+      schema:
+        type: integer
+    route_id:
+      name: route_id
+      in: path
+      required: true
+      schema:
+        type: integer
+  responses:
+    BadRequest:
+      description: The server could not understand the request due to invalid syntax.
+        The client should modify the request and try again.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              errors:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                  required:
+                    - message
+            required:
+              - message
+    Unauthorized:
+      description: Authentication is required to access the requested resource. The
+        client must include the appropriate credentials.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            required:
+              - message
+    Forbidden:
+      description: The server understood the request, but refuses to authorize it.
+        Ensure the client has appropriate permissions.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            required:
+              - message
+    InternalServerErrror:
+      description: The server encountered an unexpected condition that prevented it
+        from fulfilling the request. Report the issue to the support team if it
+        persists.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            required:
+              - message
+    NotFound:
+      description: The server cannot find the requested resource. The endpoint may be
+        invalid or the resource may no longer exist.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            required:
+              - message
+    Method Not Allowed:
+      description: The request method is not allowed for the requested resource. Check
+        the Allow header for supported methods.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              allowedMethods:
+                type: array
+                items:
+                  type: string
+            required:
+              - message
+              - allowedMethods
+    Ok:
+      description: The request was successful, and the server has returned the
+        requested resource in the response body.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+            required:
+              - data
+    Conflict:
+      description: The request could not be completed due to a conflict with the
+        current state of the resource. Resolve the conflict and try again.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            required:
+              - message
+    Too Many Requests:
+      description: The user has sent too many requests in a given amount of time.
+        Reduce the request rate and try again later.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              retryAfter:
+                type: number
+            required:
+              - message
+  securitySchemes:
+    BearerJwt:
+      type: http
+      scheme: Bearer
+      bearerFormat: Json Web Token (JWT)
+      description: "Jwt Auth: Authenticated requests contain a valid Json Web Token
+        (JWT) as part of the `Authorization: Bearer <JWT>` header."
+  schemas:
+    chat_id:
+      type: integer
+      description: Unique identifier for a chat.
+      example: 1
+    chat_company:
+      type: string
+      description: username of the company associated with a chat.
+      example: companyA
+    unread:
+      type: integer
+      description: Number of unread messages in the chat.
+      example: 5
+    Chat:
+      type: object
+      properties:
+        chat_id:
+          $ref: "#/components/schemas/chat_id"
+        company:
+          $ref: "#/components/schemas/chat_company"
+        unread:
+          $ref: "#/components/schemas/unread"
+      required:
+        - chat_id
+        - company
+        - unread
+      description: A chat belonging to a company
+    ChatCreate:
+      type: object
+      properties:
+        chat_id:
+          $ref: "#/components/schemas/chat_id"
+        company:
+          $ref: "#/components/schemas/chat_company"
+        unread:
+          $ref: "#/components/schemas/unread"
+      required:
+        - chat_id
+        - company
+        - unread
+      description: Data transfer object for creating a new Chat.
+      x-fiddle-dto-info:
+        baseSchemaName: Chat
+    message_data:
+      type: string
+      description: Content of the message.
+      example: Hello
+    Message:
+      type: object
+      properties:
+        message_id:
+          type: integer
+          description: Unique identifier for the message.
+          example: 12
+        chat_id:
+          type: integer
+          description: Identifier of the chat to which the message belongs.
+          example: 1
+        time:
+          type: string
+          format: date-time
+          description: Timestamp of when the message was sent.
+          example: 2024-06-01T08:00:00Z
+        data:
+          $ref: "#/components/schemas/message_data"
+        sender:
+          type: string
+          description: Username of the sender.
+          example: companyA
+      required:
+        - message_id
+        - chat_id
+        - time
+        - data
+        - sender
+      description: A simplified representation of a message.
+    MessageCreate:
+      type: object
+      properties:
+        chat_id:
+          type: integer
+          description: Identifier of the chat where the message will be sent.
+          example: 1
+        data:
+          $ref: "#/components/schemas/message_data"
+      required:
+        - chat_id
+        - data
+      description: Data transfer object for creating a new Message.
+      x-fiddle-dto-info:
+        baseSchemaName: Message
+    container_id:
+      type: integer
+      description: Unique identifier for the container.
+      example: 101
+    max_weight:
+      type: number
+      description: Maximum weight capacity of the container in tons.
+      example: 100
+    Container:
+      type: object
+      properties:
+        container_id:
+          $ref: "#/components/schemas/container_id"
+        max_weight:
+          $ref: "#/components/schemas/max_weight"
+      required:
+        - container_id
+        - max_weight
+      description: A shipping container
+    ContainerCreate:
+      type: object
+      properties:
+        container_id:
+          $ref: "#/components/schemas/container_id"
+        max_weight:
+          $ref: "#/components/schemas/max_weight"
+      required:
+        - max_weight
+      description: Data transfer object for creating a new Container.
+      x-fiddle-dto-info:
+        baseSchemaName: Container
+    Vehicle:
+      type: object
+      properties:
+        vehicle_id:
+          type: integer
+          description: Unique identifier for the vehicle.
+          example: 42
+        position:
+          type: object
+          description: Current GPS location of the vehicle.
+          properties:
+            latitude:
+              type: number
+              description: Latitude of the vehicle's current position.
+              example: 51.9244
+            longitude:
+              type: number
+              description: Longitude of the vehicle's current position.
+              example: 4.4777
+          required:
+            - latitude
+            - longitude
+        battery_level:
+          type: integer
+          description: Battery percentage of the electric vehicle.
+          example: 76
+        status:
+          type: string
+          enum:
+            - available
+            - in_use
+            - out_of_order
+          description: Current operational status (e.g., idle, en_route, charging).
+          example: available
+        order_id:
+          type: integer
+          description: Order currently assigned to the vehicle, if any.
+          example: 203
+      required:
+        - vehicle_id
+        - position
+        - battery_level
+        - status
+      description: An EV that transports containers
+    VehiclePartialUpdate:
+      type: object
+      properties:
+        position:
+          type: object
+          description: Updated GPS location of the vehicle.
+          properties:
+            latitude:
+              type: number
+              description: Updated latitude of the vehicle.
+              example: 52.3676
+            longitude:
+              type: number
+              description: Updated longitude of the vehicle.
+              example: 4.9041
+          required:
+            - latitude
+            - longitude
+        battery_level:
+          type: integer
+          description: Updated battery percentage of the vehicle.
+          example: 65
+        status:
+          type: string
+          enum:
+            - available
+            - in_use
+            - out_of_order
+          description: Updated operational status.
+          example: in_use
+        order_id:
+          type: integer
+          description: Updated ID of the order assigned to the vehicle.
+          example: 205
+      required: []
+      description: Data transfer object for partially updating an existing Vehicle
+        (PATCH operation).
+      x-fiddle-dto-info:
+        baseSchemaName: Vehicle
+    VehicleCreate:
+      type: object
+      properties:
+        vehicle_id:
+          type: integer
+          description: Unique identifier for the new vehicle.
+          example: 42
+        position:
+          type: object
+          description: Initial GPS location of the vehicle.
+          properties:
+            latitude:
+              type: number
+              description: Latitude of the vehicle's starting position.
+              example: 51.5074
+            longitude:
+              type: number
+              description: Longitude of the vehicle's starting position.
+              example: -0.1278
+          required:
+            - latitude
+            - longitude
+        battery_level:
+          type: integer
+          description: Battery percentage of the vehicle.
+          example: 80
+        status:
+          type: string
+          enum:
+            - available
+            - in_use
+            - out_of_order
+          description: Initial operational status of the vehicle.
+          example: available
+        order_id:
+          type: integer
+          description: Order assigned to the vehicle upon creation.
+          example: 101
+      required:
+        - vehicle_id
+        - position
+        - battery_level
+        - status
+      description: Data transfer object for creating a new Vehicle.
+      x-fiddle-dto-info:
+        baseSchemaName: Vehicle
+    Route:
+      type: object
+      properties:
+        vehicle_id:
+          type: integer
+          description: ID of the vehicle assigned to the route.
+          example: 42
+        route:
+          type: array
+          description: List of coordinates forming the route.
+          items:
+            type: object
+            properties:
+              latitude:
+                type: number
+                description: Latitude coordinate in the route.
+                example: 52.3791
+              longitude:
+                type: number
+                description: Longitude coordinate in the route.
+                example: 4.8994
+            required:
+              - latitude
+              - longitude
+        route_id:
+          type: integer
+          description: Unique identifier for the route.
+          example: 301
+      required:
+        - route
+        - route_id
+      description: A route taken by a vehicle to fulfill an order
+    RoutePartialUpdate:
+      type: object
+      properties:
+        vehicle_id:
+          type: integer
+          description: Updated ID of the vehicle assigned to the route.
+          example: 43
+        route:
+          type: array
+          description: Updated list of coordinates in the route.
+          items:
+            type: object
+            properties:
+              latitude:
+                type: number
+                description: Latitude coordinate in the route.
+                example: 51.9225
+              longitude:
+                type: number
+                description: Longitude coordinate in the route.
+                example: 4.4792
+            required:
+              - latitude
+              - longitude
+      required: []
+      description: Data transfer object for partially updating an existing Route
+        (PATCH operation).
+      x-fiddle-dto-info:
+        baseSchemaName: Route
+    RouteCreate:
+      type: object
+      properties:
+        vehicle_id:
+          type: integer
+          description: ID of the vehicle to which the route will be assigned.
+          example: 45
+        route:
+          type: array
+          description: List of coordinates defining the new route.
+          items:
+            type: object
+            properties:
+              latitude:
+                type: number
+                description: Latitude coordinate.
+                example: 52.0705
+              longitude:
+                type: number
+                description: Longitude coordinate.
+                example: 4.3007
+            required:
+              - latitude
+              - longitude
+      required:
+        - route
+      description: Data transfer object for creating a new Route.
+      x-fiddle-dto-info:
+        baseSchemaName: Route
+    no_replannings:
+      type: integer
+      description: Number of route replannings made by the system.
+      example: 1
+    OrderStats:
+      type: object
+      properties:
+        order_id:
+          type: integer
+          description: Unique identifier of the order.
+          example: 123
+        distance:
+          type: number
+          description: Total distance traveled to complete the order (in km).
+          example: 42.7
+        operation_cost:
+          type: number
+          description: Cost incurred during the order operation.
+          example: 134.5
+        waiting_time:
+          type: string
+          description: Total waiting time in ISO 8601 duration format.
+          example: PT1H30M
+        no_changes:
+          type: integer
+          description: Number of times the order details were changed.
+          example: 2
+        no_replannings:
+          $ref: "#/components/schemas/no_replannings"
+      required:
+        - order_id
+        - operation_cost
+        - no_changes
+        - no_replannings
+      description: Statistics related to an order
+    OrderStatsPartialUpdate:
+      type: object
+      properties:
+        distance:
+          type: number
+          description: Total distance traveled to complete the order (in km).
+          example: 42.7
+        operation_cost:
+          type: number
+          description: Cost incurred during the order operation.
+          example: 134.5
+        waiting_time:
+          type: string
+          description: Total waiting time in ISO 8601 duration format.
+          example: PT1H30M
+        no_changes:
+          type: integer
+          description: Number of times the order details were changed by a user.
+          example: 2
+        no_replannings:
+          $ref: "#/components/schemas/no_replannings"
+      required: []
+      description: Data transfer object for partially updating an existing order's
+        stats (PATCH operation).
+      x-fiddle-dto-info:
+        baseSchemaName: OrderStats
+    Order:
+      type: object
+      properties:
+        order_id:
+          type: integer
+          description: Unique identifier of the order.
+          example: 123
+        requester:
+          type: string
+          description: User who requested the order.
+          example: companyA
+        made_at:
+          type: string
+          format: date-time
+          example: 2024-06-01T08:00:00Z
+        source:
+          type: string
+          description: Username associated with the starting location of the order.
+          example: companyA
+        destination:
+          type: string
+          description: Username associated with the destination of the order.
+          example: companyA
+        route_id:
+          type: integer
+          description: ID of the route associated with the order.
+          example: 12
+        tw_start:
+          type: string
+          format: date-time
+          example: 2024-06-01T08:00:00Z
+        tw_end:
+          type: string
+          format: date-time
+          example: 2024-06-01T08:00:00Z
+        status:
+          type: string
+          enum:
+            - created
+            - scheduled
+            - undergoing
+            - completed
+            - canceled
+          example: created
+        weight:
+          type: number
+          example: 12
+        operation_type:
+          type: string
+          enum:
+            - loading
+            - unloading
+          example: loading
+        freight_value:
+          type: number
+          description: value of the contents in EUR.
+          example: 12
+        is_shared:
+          type: boolean
+        container_id:
+          type: integer
+        eta:
+          type: string
+          format: date-time
+          example: 2024-06-01T08:00:00Z
+      required:
+        - order_id
+        - requester
+        - made_at
+        - source
+        - destination
+        - route_id
+        - tw_start
+        - tw_end
+        - status
+        - weight
+        - operation_type
+        - freight_value
+        - is_shared
+        - container_id
+        - eta
+      description: An order made by a company
+    OrderPartialUpdate:
+      type: object
+      properties:
+        made_at:
+          type: string
+          format: date-time
+          example: 2024-06-01T08:00:00Z
+        source:
+          type: string
+          description: Username associated with the starting location of the order.
+          example: companyA
+        destination:
+          type: string
+          description: Username associated with the destination of the order.
+          example: companyA
+        route_id:
+          type: integer
+          example: 132
+        tw_start:
+          type: string
+          format: date-time
+          example: 2024-06-01T08:00:00Z
+        tw_end:
+          type: string
+          format: date-time
+          example: 2024-06-01T08:00:00Z
+        status:
+          type: string
+          enum:
+            - created
+            - scheduled
+            - undergoing
+            - completed
+            - canceled
+          example: created
+        weight:
+          type: number
+          example: 12
+        operation_type:
+          type: string
+          enum:
+            - loading
+            - unloading
+          example: loading
+        freight_value:
+          type: number
+          example: 1500
+        container_id:
+          type: integer
+          example: 1
+        eta:
+          type: string
+          format: date-time
+        is_shared:
+          type: boolean
+      required: []
+      description: Data transfer object for partially updating an existing Order
+        (PATCH operation).
+      x-fiddle-dto-info:
+        baseSchemaName: Order
+    OrderCreate:
+      type: object
+      properties:
+        requester:
+          type: string
+          description: User who requested the order.
+          example: companyA
+        source:
+          type: string
+          example: companyA
+        destination:
+          type: string
+          example: companyA
+        tw_start:
+          type: string
+          format: date-time
+          example: 2024-06-01T08:00:00Z
+        tw_end:
+          type: string
+          format: date-time
+          example: 2024-06-01T08:00:00Z
+        weight:
+          type: number
+          example: 55
+        operation_type:
+          type: string
+          enum:
+            - loading
+            - unloading
+          example: loading
+        freight_value:
+          type: number
+          example: 567
+        container_id:
+          type: integer
+          example: 43
+        is_shared:
+          type: boolean
+      required:
+        - requester
+        - source
+        - destination
+        - tw_start
+        - tw_end
+        - weight
+        - operation_type
+        - freight_value
+        - is_shared
+      description: Data transfer object for creating a new Order.
+      x-fiddle-dto-info:
+        baseSchemaName: Order
+    OrderSummary:
+      type: object
+      properties:
+        order_id:
+          type: integer
+        made_at:
+          type: string
+          format: date-time
+          example: 2024-06-01T08:00:00Z
+        source:
+          type: string
+          example: companyA
+        destination:
+          type: string
+          example: companyA
+        tw_start:
+          type: string
+          format: date-time
+          example: 2024-06-01T08:00:00Z
+        tw_end:
+          type: string
+          format: date-time
+          example: 2024-06-01T08:00:00Z
+        status:
+          type: string
+          enum:
+            - created
+            - scheduled
+            - undergoing
+            - completed
+            - canceled
+          example: created
+        operation_type:
+          type: string
+          enum:
+            - loading
+            - unloading
+          example: loading
+        freight_value:
+          type: number
+          example: 342
+        eta:
+          type: string
+          format: date-time
+          example: 2024-06-01T08:00:00Z
+      required:
+        - order_id
+        - made_at
+        - source
+        - destination
+        - tw_start
+        - tw_end
+        - status
+        - operation_type
+        - freight_value
+        - eta
+      description: A simplified representation of a Order, typically used in list views.
+      x-fiddle-dto-info:
+        baseSchemaName: Order
+    Company:
+      type: object
+      properties:
+        username:
+          type: string
+          example: companyA
+        password:
+          type: string
+          example: 4$zKbc9GZnZ1UOeQ7IgGDsDQ$Oq3U6n+cNmC8MUt1kUZ1E/cNaJZ6FS69aUlFoCqZLXE
+        name:
+          type: string
+          example: A
+        location:
+          type: object
+          properties:
+            latitude:
+              type: number
+              example: 41.1
+            longitude:
+              type: number
+              example: 41.1
+          required:
+            - latitude
+            - longitude
+        closing_time:
+          type: string
+          format: time
+          example: 14:30:00
+        opening_time:
+          type: string
+          format: time
+          example: 14:30:00
+      required:
+        - username
+        - password
+        - name
+        - location
+        - closing_time
+        - opening_time
+      description: A simplified representation of a Company, typically used in list views.
+    CompanySummary:
+      type: object
+      properties:
+        username:
+          type: string
+          example: companyA
+        name:
+          type: string
+          example: A
+        location:
+          type: object
+          properties:
+            latitude:
+              type: number
+              example: 41.1
+            longitude:
+              type: number
+              example: 41.1
+          required:
+            - latitude
+            - longitude
+        closing_time:
+          type: string
+          format: time
+          example: 14:30:00
+        opening_time:
+          type: string
+          format: time
+          example: 14:30:00
+      required:
+        - username
+        - name
+        - location
+        - closing_time
+        - opening_time
+      description: A simplified representation of a Company.
+      x-fiddle-dto-info:
+        baseSchemaName: Company
+    CompanyPartialUpdate:
+      type: object
+      properties:
+        username:
+          type: string
+          example: companyA
+        password:
+          type: string
+        name:
+          type: string
+          example: A
+        location:
+          type: object
+          properties:
+            latitude:
+              type: number
+              example: 41.1
+            longitude:
+              type: number
+              example: 41.1
+          required:
+            - latitude
+            - longitude
+        closing_time:
+          type: string
+          format: time
+          example: 14:30:00
+        opening_time:
+          type: string
+          format: time
+          example: 14:30:00
+      required: []
+      description: Data transfer object for partially updating an existing Company
+        (PATCH operation).
+      x-fiddle-dto-info:
+        baseSchemaName: Company
+    Costs:
+      type: object
+      properties:
+        empty_ctr:
+          type: number
+          example: 50
+        full_ctr:
+          type: number
+          example: 50
+        per_km:
+          type: number
+          example: 50
+      required:
+        - empty_ctr
+        - full_ctr
+        - per_km
+      description: Cost parameters related to transport
+    CostsPartialUpdate:
+      type: object
+      properties:
+        empty_ctr:
+          type: number
+          example: 50
+        full_ctr:
+          type: number
+          example: 50
+        per_km:
+          type: number
+          example: 50
+      required: []
+      description: Data transfer object for partially updating an existing Costs
+        (PATCH operation).
+      x-fiddle-dto-info:
+        baseSchemaName: Costs
+    Notification:
+      type: object
+      properties:
+        notification_id:
+          type: integer
+          example: 123
+        data:
+          type: string
+          example: "Order #342 has been updated by an admin"
+        receiver:
+          type: string
+          example: nike
+        type:
+          type: string
+          enum:
+            - order
+            - message
+          example: order
+        ref_id:
+          type: integer
+          example: 789
+      required:
+        - data
+        - receiver
+        - notification_id
+        - type
+        - ref_id
+      description: A notification sent to a user related to either a message or an order.
+tags:
+  - name: companies
+  - name: orders
+  - name: costs
+  - name: chats
+  - name: messages
+  - name: containers
+  - name: vehicles
+  - name: routes
+  - name: stats
+  - name: notifications
+  - name: login

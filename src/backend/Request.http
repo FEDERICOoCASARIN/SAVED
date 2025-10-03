@@ -1,0 +1,24 @@
+### GET stats
+GET http://localhost:8080/saved4_war_exploded/api/analytics/all?period=month
+
+### GET all orders
+GET http://localhost:8080/saved4_war_exploded/api/analytics/all
+
+### Get all  companies
+GET http://localhost:8080/saved4_war_exploded/api/companies?limit=10
+
+### Get all changelog
+GET http://localhost:8080/saved4_war_exploded/api/changelog
+
+### Get changelog specific company
+GET http://localhost:8080/saved4_war_exploded/api/changelog?orderOwner=company_a
+
+### Get user analytics
+GET http://localhost:8080/saved4_war_exploded/api/analytics/user-analytics?companyName=company_a
+
+### Get line chart data
+GET http://localhost:8080/saved4_war_exploded/api/analytics/orders-by-period?period=day
+
+
+### Activate
+GET http://localhost:8080/saved4_war_exploded/api/orders/activate

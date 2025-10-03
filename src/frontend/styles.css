@@ -1,0 +1,54 @@
+@import "tailwindcss";
+
+.login-page {
+  display: flex;
+  justify-content: center;
+}
+.login-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+}
+
+.login-pic-container {
+  flex: 1;
+  width: 50%;
+}
+
+.logo {
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+.sign-in-btn {
+  background-color: #fa812f;
+  margin-top: 20px;
+}
+
+.login-container input {
+  margin-bottom: 20px;
+}
+
+.remember-me-cont {
+  display: flex;
+  gap: 10px;
+}
+
+@theme {
+  --color-navbar1: rgba(251, 135, 19, 1);
+  --color-navbar2: rgba(253, 176, 100, 0.5);
+  --color-navbar3: rgba(255, 212, 170, 0);
+
+  --color-db: #efeef5;
+  --color-chatbar: #e9e8f2;
+  --color-chat-title: #c8c8c8;
+}
+
+html,
+body,
+#app,
+main {
+  height: 100%;
+}
