@@ -4,18 +4,6 @@ A collaborative platform designed by six University of Twente bachelor student
 
 ---
 
-## 📸 Screenshots
-
-<h2>Prototype -> Final Result</h2>
-<table>
-  <tr>
-    <td><img src="screenshots/screen1.jpeg" alt="LeftPic" width="400"></td>
-    <td><img src="screenshots/screen2.jpeg" alt="RightPic" width="400"></td>
-  </tr>
-</table>
-
----
-
 ## ✨ Features
 
 - Role-based authentication (Admin and Company users)
